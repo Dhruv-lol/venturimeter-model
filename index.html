@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Venturimeter | Interactive flow model</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--panel:#111c2e;--panel2:#0d1727;--line:#26364d;--text:#e8f0fb;--muted:#93a6be;--cyan:#55d6e8;--orange:#ffb36b;--green:#8fe0bb}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 0%,#14243a 0,transparent 55%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}.wrap{max-width:1200px;margin:auto;padding:34px 22px 50px}.eyebrow{color:var(--cyan);text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800}.top{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;margin-bottom:24px}h1{font-size:clamp(28px,4vw,42px);letter-spacing:-.04em;margin:7px 0}.intro{max-width:650px;color:var(--muted);margin:0}.badge{white-space:nowrap;border:1px solid #33506a;border-radius:99px;color:#b6cedd;padding:8px 12px;font-size:12px}.layout{display:grid;grid-template-columns:340px 1fr;gap:18px}.card{background:linear-gradient(145deg,rgba(20,32,51,.97),rgba(14,24,40,.97));border:1px solid var(--line);border-radius:16px;box-shadow:0 15px 40px #02071155}.controls{padding:20px}.card h2{margin:0 0 16px;font-size:16px}.field{margin:16px 0 19px}.labelrow{display:flex;justify-content:space-between;gap:8px;margin-bottom:7px}.labelrow label{font-weight:650}.value{font-variant-numeric:tabular-nums;color:var(--cyan);font-size:13px}input[type=range]{width:100%;accent-color:var(--cyan)}.limits{display:flex;justify-content:space-between;color:#6f8299;font-size:11px;margin-top:-2px}.select,input[type=number]{background:#0a1422;color:var(--text);border:1px solid #34465e;border-radius:8px;padding:10px 11px;width:100%;font:inherit}.select:focus,input:focus{outline:2px solid #55d6e855;border-color:var(--cyan)}.units{color:#70849b;font-size:11px;margin-top:4px}.toggle{display:flex;gap:10px;align-items:flex-start;background:#0b1625;padding:12px;border:1px solid #293c52;border-radius:10px;color:#c8d5e4;font-size:13px}.toggle input{accent-color:var(--cyan);margin-top:4px}.toggle small{display:block;color:var(--muted);line-height:1.4;margin-top:3px}.results{display:grid;grid-template-columns:repeat(3,minmax(130px,1fr));gap:10px;margin-bottom:16px}.metric{background:#0b1625;border:1px solid #27394e;border-radius:12px;padding:13px 14px;min-height:84px}.metric .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}.metric .v{font-size:21px;font-weight:750;letter-spacing:-.02em;margin-top:4px;font-variant-numeric:tabular-nums}.metric .u{font-size:11px;color:#778ba3;margin-left:4px;font-weight:500}.visual{padding:18px}.visualhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}.visualhead h2{margin:0}.legend{display:flex;gap:15px;color:var(--muted);font-size:11px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.diagram{width:100%;display:block;min-height:230px}.diagram text{font-family:inherit}.pressures{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.pressure{border-radius:10px;background:#0b1625;padding:12px 14px;border:1px solid #26394f}.pressure b{display:block;font-size:12px;color:#bdcde0;margin-bottom:5px}.barbg{height:8px;background:#1b2b40;border-radius:8px;overflow:hidden;margin:7px 0}.bar{height:100%;width:0;background:linear-gradient(90deg,#55d6e8,#8fe0bb);border-radius:8px;transition:width .2s}.bar.negative{background:linear-gradient(90deg,#ff8d78,#ffb36b)}.pressure span{font-size:12px;color:var(--muted)}.notes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}.note{padding:16px 18px;color:var(--muted);font-size:13px}.note h3{color:var(--text);margin:0 0 7px;font-size:14px}.note p{margin:5px 0}.formula{font-family:ui-monospace,SFMono-Regular,monospace;color:#b7d9e6;font-size:12px;background:#091321;padding:9px 10px;border-radius:7px;display:block;overflow-wrap:anywhere}.foot{margin-top:16px;color:#71849a;font-size:11px}.warning{color:#ffd19d}
+@media(max-width:860px){.layout{grid-template-columns:1fr}.controls{display:grid;grid-template-columns:1fr 1fr;column-gap:18px}.controls h2,.fluidblock,.toggle{grid-column:1/-1}.field{margin:12px 0}}@media(max-width:600px){.wrap{padding:23px 14px 34px}.top{display:block}.badge{display:inline-block;margin-top:13px}.controls{display:block}.results{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{min-height:76px}.metric .v{font-size:18px}.notes{grid-template-columns:1fr}.legend{gap:8px}.visual{padding:14px}.diagram{min-height:180px}}
+</style></head>
+<body><main class="wrap"><header class="top"><div><div class="eyebrow">Fluid mechanics · interactive model</div><h1>Venturimeter</h1><p class="intro">Explore how a converging–throat–diverging meter trades pressure for velocity. Adjust the geometry and operating conditions to compare the report’s CFD values with live ideal and estimated-loss calculations.</p></div><div class="badge">Bernoulli model · SI units</div></header>
+<div class="layout"><section class="card controls"><h2>Operating conditions</h2>
+<div class="field"><div class="labelrow"><label for="fluid">Fluid</label></div><select id="fluid" class="select"><option value="998">Water · 998 kg/m³</option><option value="832">Diesel · 832 kg/m³</option><option value="custom">Custom density…</option></select></div>
+<div class="field"><div class="labelrow"><label for="basis">Calculation basis</label></div><select id="basis" class="select"><option value="report">Report CFD case</option><option value="ideal">Live ideal Bernoulli</option><option value="losses">Bernoulli with estimated losses</option></select><div class="units">Changing geometry switches to a live calculation.</div></div>
+<div class="field" id="customWrap" hidden><div class="labelrow"><label for="density">Density</label><span class="value" id="densityOut">850 kg/m³</span></div><input id="density" type="range" min="500" max="1500" step="1" value="850"><div class="limits"><span>500</span><span>1500 kg/m³</span></div></div>
+<div class="field" id="customMuWrap" hidden><div class="labelrow"><label for="viscosity">Dynamic viscosity μ</label></div><input id="viscosity" class="select" type="number" min="0.00001" max="1" step="0.00001" value="0.001"><div class="units">Pa·s</div></div>
+<div class="field"><div class="labelrow"><label for="area1">Inlet area</label><span class="value" id="area1Out"></span></div><input id="area1" type="range" min="0.0100" max="0.1800" step="0.0001" value="0.1257"><div class="units">Report geometry: Ø40 cm · ≈1,256.6 cm²</div><div class="limits"><span>0.0100</span><span>0.1800 m²</span></div></div>
+<div class="field"><div class="labelrow"><label for="area2">Throat area</label><span class="value" id="area2Out"></span></div><input id="area2" type="range" min="0.0050" max="0.0600" step="0.0001" value="0.0314"><div class="units">Report geometry: Ø20 cm · ≈314.2 cm²</div><div class="limits"><span>0.0050</span><span>0.0600 m²</span></div></div>
+<div class="field"><div class="labelrow"><label for="angle">Diverging half-angle</label><span class="value" id="angleOut"></span></div><input id="angle" type="range" min="2" max="20" step="0.5" value="6"><div class="limits"><span>2°</span><span>20°</span></div></div>
+<div class="field"><div class="labelrow"><label for="velocity">Inlet velocity</label><span class="value" id="velocityOut"></span></div><input id="velocity" type="range" min="0.2" max="15" step="0.1" value="5"><div class="limits"><span>0.2</span><span>15.0 m/s</span></div></div>
+<div class="field fluidblock"><div class="labelrow"><label for="p1">Inlet static gauge pressure</label></div><input id="p1" class="select" type="number" min="-101000" max="1000000" step="10" value="18180"><div class="units">Adjustable inlet gauge pressure · Pa; outlet stays at 0 kPa gauge</div></div>
+<div class="field"><div class="labelrow"><label for="kContraction">Contraction loss coefficient Kc</label></div><input id="kContraction" class="select" type="number" min="0" max="5" step="0.01" value="0.10"><div class="units">Based on throat velocity; 0.10 starting estimate for the report’s conical reducer; editable</div></div>
+<div class="field"><div class="labelrow"><label for="kDiffuser">Diffuser loss coefficient Kd</label></div><input id="kDiffuser" class="select" type="number" min="0" max="5" step="0.01" value="0.23"><div class="units">Based on throat velocity; 0.23 starting estimate at 6° half-angle and 4:1 area ratio; editable</div></div>
+<div class="units fluidblock">Commercial steel roughness ε = 0.045 mm. Loss lengths use report dimensions: inlet 0.20 m, converger 0.236 m, throat 0.20 m; diffuser length follows its angle.</div>
+</section>
+<div><section class="card visual"><div class="visualhead"><h2>Flow profile</h2><div class="legend"><span><i class="dot" style="background:var(--cyan)"></i>Velocity</span><span><i class="dot" style="background:var(--orange)"></i>Pressure tap</span></div></div>
+<svg class="diagram" viewBox="0 0 760 280" role="img" aria-label="Venturi profile showing inlet, throat, diffuser and pressure head columns"><defs><linearGradient id="fluid" x1="0" x2="1"><stop stop-color="#2fb9d2" stop-opacity=".08"/><stop offset=".5" stop-color="#55d6e8" stop-opacity=".24"/><stop offset="1" stop-color="#2fb9d2" stop-opacity=".08"/></linearGradient><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#55d6e8"/></marker></defs>
+<path id="topWall" fill="none" stroke="#a9bed1" stroke-width="3"/><path id="bottomWall" fill="none" stroke="#a9bed1" stroke-width="3"/><path id="fluidFill" fill="url(#fluid)" stroke="none"/><line x1="45" y1="140" x2="715" y2="140" stroke="#31465c" stroke-dasharray="5 6"/><line x1="80" y1="140" x2="170" y2="140" stroke="#55d6e8" stroke-width="3" marker-end="url(#arrow)"/><line x1="332" y1="140" x2="440" y2="140" stroke="#55d6e8" stroke-width="3" marker-end="url(#arrow)"/><line x1="570" y1="140" x2="650" y2="140" stroke="#55d6e8" stroke-width="3" marker-end="url(#arrow)"/>
+<line id="tap1" x1="155" y1="70" x2="155" y2="212" stroke="#ffb36b" stroke-width="2" stroke-dasharray="4 4"/><line id="tap2" x1="344" y1="92" x2="344" y2="212" stroke="#ffb36b" stroke-width="2" stroke-dasharray="4 4"/><circle cx="155" cy="140" r="5" fill="#ffb36b"/><circle cx="344" cy="140" r="5" fill="#ffb36b"/>
+<text x="155" y="253" text-anchor="middle" fill="#c6d5e3" font-size="13">INLET</text><text x="344" y="253" text-anchor="middle" fill="#c6d5e3" font-size="13">THROAT</text><text x="568" y="253" text-anchor="middle" fill="#c6d5e3" font-size="13">DIFFUSER</text><text id="v1svg" x="155" y="62" text-anchor="middle" fill="#55d6e8" font-size="12"></text><text id="v2svg" x="344" y="83" text-anchor="middle" fill="#55d6e8" font-size="12"></text><text x="251" y="32" text-anchor="middle" fill="#8298ae" font-size="11">Diverging half-angle</text><path id="angleArc" d="" fill="none" stroke="#8298ae"/>
+</svg>
+<div class="pressures"><div class="pressure"><b>Inlet gauge pressure head · p₁ / ρg</b><div class="barbg"><div id="bar1" class="bar"></div></div><span id="head1"></span></div><div class="pressure"><b>Throat gauge pressure head · p₂ / ρg</b><div class="barbg"><div id="bar2" class="bar"></div></div><span id="head2"></span></div></div></section>
+<section class="results" aria-live="polite"><div class="metric"><div class="k">Inlet velocity V₁</div><div class="v" id="rV1">—</div></div><div class="metric"><div class="k">Throat velocity V₂</div><div class="v" id="rV2">—</div></div><div class="metric"><div class="k">Inlet pressure p₁ (gauge)</div><div class="v" id="rP1">—</div></div><div class="metric"><div class="k">Throat pressure p₂ (gauge)</div><div class="v" id="rP2">—</div></div><div class="metric"><div class="k">Differential pressure p₁−p₂</div><div class="v" id="rDP">—</div></div><div class="metric"><div class="k">Differential head Δh</div><div class="v" id="rDH">—</div></div><div class="metric"><div class="k">Volume flow Q</div><div class="v" id="rQ">—</div></div><div class="metric"><div class="k">Mass flow ṁ</div><div class="v" id="rM">—</div></div><div class="metric"><div class="k">Throat gauge head p₂/ρg</div><div class="v" id="rH2">—</div></div><div class="metric"><div class="k">Outlet pressure p_out</div><div class="v" id="rPout">0.00<span class="u">kPa gauge</span></div></div><div class="metric"><div class="k">Major head loss h_f</div><div class="v" id="rHmajor">—</div></div><div class="metric"><div class="k">Minor head loss h_m</div><div class="v" id="rHminor">—</div></div><div class="metric"><div class="k">Total estimated loss h_L</div><div class="v" id="rHtotal">—</div></div><div class="metric"><div class="k">Darcy friction factor f (inlet / throat)</div><div class="v" id="rF">—</div></div></section></div></div>
+<div class="notes"><section class="card note"><h3>Model assumptions</h3><p>Steady, incompressible flow through a horizontal pipe; uniform velocity at each section; no elevation change. The Report CFD case option displays the report’s two simulated cases. Live ideal Bernoulli ignores head loss in the pressure equation. Bernoulli with estimated losses subtracts inlet-pipe, converger, half-throat friction, and contraction loss when estimating throat pressure.</p><p class="formula">h_f = Σ f(L/D)V²/(2g) &nbsp; · &nbsp; h_m = Σ K V²/(2g)</p></section><section class="card note"><h3>Reading the pressure heads</h3><p>Pressure heads use gauge pressure: h = p_gauge/(ρg), shown as metres of the selected fluid. The outlet boundary is fixed at atmospheric pressure: p_out = 0 kPa gauge. Inlet gauge pressure remains adjustable. Differential head is Δh = (p₁−p₂)/(ρg); the common atmospheric reference cancels from this difference.</p><p class="warning">The report’s throat values are reproduced as reported CFD gauge pressures. They fall below −101.3 kPa gauge, implying negative absolute pressure at standard atmosphere; treat them as solver/reference outputs that need validation, not physically realizable liquid pressures. The head-loss values are estimates: commercial steel roughness is set to 0.045 mm; friction uses Darcy–Weisbach with Colebrook friction factors. Minor losses include only the conical contraction and diffuser. No entry, exit, bends, or valves are included.</p></section></div>
+<div class="foot">The report geometry is based on 40 cm inlet and 20 cm throat diameters (areas 1,256.6 cm² and 314.2 cm²). The diameters imply areas of about 1,256.6 cm² and 314.2 cm², consistent with your correction. The report’s separate 800 cm² / 400 cm² area figures conflict with both the stated diameters and the stated 0.25 area ratio; the model uses the diameter-derived areas. CFD benchmark pressures and reported peak throat speeds are fixed to the report cases; peak speeds are local contour maxima, while the loss estimate uses section-average continuity velocity. Major loss integrates Darcy friction across report-based lengths and the variable-diameter transitions. Minor losses use the editable Kc and Kd values. Changing geometry or operating controls switches to a live calculation. Ideal flow rate is Q = A₁V₁. Water and diesel viscosity use the report values (1.003 mPa·s and 2.4 mPa·s); diesel is treated as constant-viscosity for this estimate, so shear-thinning behavior is not modeled. Diesel density varies by grade and temperature; custom fluid inputs include viscosity.</div></main>
+<script>
+const $=id=>document.getElementById(id),g=9.80665,epsilon=0.000045;
+const fmt=(n,d=2)=>Number.isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d}):'—';
+const reportCases={
+  '998':{rho:998.2,mu:0.001003,V1:5,Vpeak:20.19,p1:18180,p2:-201200},
+  '832':{rho:832,mu:0.0024,V1:10,Vpeak:40.37,p1:55640,p2:-586100}
+};
+function applyReportPreset(){const item=reportCases[$('fluid').value];if(!item)return;$('velocity').value=item.V1;$('p1').value=item.p1;}
+function frictionFactor(Re,D){
+ if(!(Re>0&&D>0))return 0;
+ const laminar=64/Re;
+ if(Re<=2300)return laminar;
+ let f=0.02;
+ for(let i=0;i<40;i++){
+   const inv=-2*Math.log10(epsilon/(3.7*D)+2.51/(Re*Math.sqrt(f)));
+   const next=1/(inv*inv);
+   if(Math.abs(next-f)<1e-10){f=next;break;}
+   f=next;
+ }
+ if(Re>=4000)return f;
+ const x=(Re-2300)/1700,w=x*x*(3-2*x);
+ return laminar*(1-w)+f*w;
+}
+function straightLoss(L,D,V,rho,mu){
+ if(!(L>0&&D>0))return {h:0,f:0};
+ const Re=rho*V*D/mu,f=frictionFactor(Re,D);
+ return {h:f*(L/D)*(V*V/(2*g)),f};
+}
+function taperedLoss(Da,Db,L,Q,rho,mu){
+ if(!(L>0&&Da>0&&Db>0))return 0;
+ const n=80,dx=L/n;let h=0;
+ for(let i=0;i<n;i++){
+  const t=(i+0.5)/n,D=Da+(Db-Da)*t,V=Q/(Math.PI*D*D/4),Re=rho*V*D/mu,f=frictionFactor(Re,D);
+  h+=f*(dx/D)*(V*V/(2*g));
+ }
+ return h;
+}
+function update(){
+ const A1=+$('area1').value,A2=+$('area2').value,angle=+$('angle').value,mode=$('basis').value;
+ const report=mode==='report' && !!reportCases[$('fluid').value];
+ const item=report?reportCases[$('fluid').value]:null;
+ const rho=item?item.rho:($('fluid').value==='custom'?+$('density').value:+$('fluid').value);
+ const mu=item?item.mu:($('fluid').value==='custom'?+$('viscosity').value:($('fluid').value==='832'?0.0024:0.001003));
+ const V1=item?item.V1:+$('velocity').value,Q=A1*V1,Vavg2=Q/A2,V2=item?item.Vpeak:Vavg2;
+ const p1=item?item.p1:(+$('p1').value||0);
+ const D1=Math.sqrt(4*A1/Math.PI),D2=Math.sqrt(4*A2/Math.PI);
+ const L1=0.20,Lc=Math.abs(D1-D2)/(2*Math.tan(23*Math.PI/180)),Lt=0.20,Ld=Math.abs(D1-D2)/(2*Math.tan(angle*Math.PI/180));
+ const inlet=straightLoss(L1,D1,V1,rho,mu),throat=straightLoss(Lt,D2,Vavg2,rho,mu);
+ const hConv=taperedLoss(D1,D2,Lc,Q,rho,mu),hDiff=taperedLoss(D2,D1,Ld,Q,rho,mu);
+ const hMajor=inlet.h+hConv+throat.h+hDiff;
+ const Kc=Math.max(0,+$('kContraction').value||0),Kd=Math.max(0,+$('kDiffuser').value||0);
+ const hMinorC=Kc*Vavg2*Vavg2/(2*g),hMinorD=Kd*Vavg2*Vavg2/(2*g),hMinor=hMinorC+hMinorD,hTotal=hMajor+hMinor;
+ const hMajorUp=inlet.h+hConv+0.5*throat.h;
+ const p2Ideal=p1+0.5*rho*(V1*V1-Vavg2*Vavg2);
+ const p2=report?item.p2:(mode==='losses'?p2Ideal-rho*g*(hMajorUp+hMinorC):p2Ideal);
+ const h1=p1/(rho*g),h2=p2/(rho*g),dh=(p1-p2)/(rho*g),dp=p1-p2;
+ $('customWrap').hidden=$('fluid').value!=='custom';$('customMuWrap').hidden=$('fluid').value!=='custom';$('densityOut').textContent=`${fmt(rho,0)} kg/m³`;
+ $('area1Out').textContent=`${fmt(A1,4)} m² · ${fmt(A1*10000,1)} cm²`; $('area2Out').textContent=`${fmt(A2,4)} m² · ${fmt(A2*10000,1)} cm²`; $('angleOut').textContent=`${fmt(angle,1)}°`; $('velocityOut').textContent=`${fmt(V1,1)} m/s`;
+ $('velocity').disabled=report;$('p1').disabled=false;
+ $('rV2').parentElement.querySelector('.k').textContent=report?'Reported peak throat velocity V₂':'Section-average throat velocity V₂';
+ const set=(id,val,unit,d=2)=>$(id).innerHTML=`${fmt(val,d)}<span class="u">${unit}</span>`;
+ set('rV1',V1,'m/s');set('rV2',V2,'m/s');set('rP1',p1/1000,'kPa gauge',2);set('rP2',p2/1000,'kPa gauge',2);set('rDP',dp/1000,'kPa',2);set('rDH',dh,'m',3);set('rQ',Q*1000,'L/s',3);set('rM',rho*Q,'kg/s',3);set('rH2',h2,'m',3);
+ set('rHmajor',hMajor,'m',3);set('rHminor',hMinor,'m',3);set('rHtotal',hTotal,'m',3);set('rF',inlet.f,' / '+fmt(throat.f,4),4);
+ $('head1').textContent=`${fmt(h1,3)} m of fluid`; $('head2').textContent=`${fmt(h2,3)} m of fluid`;
+ const max=Math.max(Math.abs(h1),Math.abs(h2),.01);$('bar1').style.width=`${Math.min(100,100*Math.abs(h1)/max)}%`;$('bar2').style.width=`${Math.min(100,100*Math.abs(h2)/max)}%`;$('bar1').classList.toggle('negative',h1<0);$('bar2').classList.toggle('negative',h2<0);
+// Area controls set section diameter via equivalent circular diameters; profile visual is schematic.
+const d1=Math.sqrt(A1/Math.PI),d2=Math.sqrt(A2/Math.PI),scale=88/Math.max(d1,d2);let r1=Math.max(23,d1*scale),r2=Math.max(12,Math.min(r1-4,d2*scale));
+const x0=35,x1=170,x2=340,x3=430,x4=700,ra=r1,rt=r2;
+const top=`M${x0} ${140-ra} L${x1} ${140-ra} Q${x2-36} ${140-rt} ${x2} ${140-rt} L${x3} ${140-rt} Q${x3+100} ${140-rt-(ra-rt)*.48} ${x4} ${140-ra}`;
+const bottom=`M${x0} ${140+ra} L${x1} ${140+ra} Q${x2-36} ${140+rt} ${x2} ${140+rt} L${x3} ${140+rt} Q${x3+100} ${140+rt+(ra-rt)*.48} ${x4} ${140+ra}`;
+$('topWall').setAttribute('d',top);$('bottomWall').setAttribute('d',bottom);$('fluidFill').setAttribute('d',`${top} L${x4} ${140+ra} L${x3} ${140+rt} L${x2} ${140+rt} Q${x2-36} ${140+rt} ${x1} ${140+ra} L${x0} ${140+ra} Z`);
+$('tap1').setAttribute('y1',140-ra-14);$('tap1').setAttribute('y2',140+ra+30);$('tap2').setAttribute('y1',140-rt-18);$('tap2').setAttribute('y2',140+rt+30);$('v1svg').setAttribute('y',140-ra-20);$('v2svg').setAttribute('y',140-rt-20);$('v1svg').textContent=`${fmt(V1,1)} m/s`;$('v2svg').textContent=`${fmt(V2,1)} m/s`;
+const half=Math.min(18,angle);$('angleArc').setAttribute('d',`M${x3+20} ${140-rt} Q${x3+40} ${140-rt-8} ${x3+55} ${140-rt-10}`);
+}
+document.querySelectorAll('#area1,#area2,#angle,#velocity,#p1,#density,#viscosity').forEach(el=>el.addEventListener('input',()=>{if($('basis').value==='report')$('basis').value='ideal';update();}));
+document.querySelectorAll('#kContraction,#kDiffuser').forEach(el=>el.addEventListener('input',()=>{$('basis').value='losses';update();}));
+$('fluid').addEventListener('change',()=>{if($('fluid').value==='custom')$('basis').value='ideal';else if($('basis').value==='report')applyReportPreset();else $('p1').value=$('fluid').value==='998'?18180:55640;update();});
+$('basis').addEventListener('change',()=>{if($('basis').value==='report'){if(!reportCases[$('fluid').value])$('basis').value='ideal';else applyReportPreset();}update();});
+applyReportPreset();update();
+</script></body></html>
